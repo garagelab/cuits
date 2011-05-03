@@ -1,7 +1,7 @@
 CUITs.org
 ===
 
-CUITs.org es una base de datos abierto de información sobre personas físicas y jurídicas.
+CUITs.org es una base de datos abierta de información sobre personas físicas y jurídicas.
 
 Scraping
 ---
