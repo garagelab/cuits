@@ -10,6 +10,8 @@ def extract(doc, field)
 end
 
 while id = Persona.pending.blpop(0)
+  sleep 2
+
   proveedor_id, persona_id = id[1].split(",")
 
   url = "https://www.argentinacompra.gov.ar/prod/onc/sitio/Perfiles/PUB/prv_detalle_proveedor.asp?IdPrv=#{proveedor_id}&IdPerson=#{persona_id}"
