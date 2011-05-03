@@ -1,0 +1,25 @@
+#! /usr/bin/env ruby
+# encoding: UTF-8
+
+require File.expand_path("../app", File.dirname(__FILE__))
+
+# Opcionalmente, parsear esta lista de provincias de
+# https://www.argentinacompra.gov.ar/prod/onc/sitio/Perfiles/PUB/prv_consulta.asp
+%w[2 6 10 14 18 22 26 30 34 38 42 46 50 54 58 62 66 70 74 78 82 86 90 94 96 97 98 99].each do |provincia_id|
+
+  page = 1
+  last_page = nil
+
+  while !last_page || page <= last_page
+    source = `curl -d 'txtCUIT=&txtDenominacion=&slcProvincia=#{provincia_id}&slcEstado=0&slcRubro=0&slcRUNSPSC=0&slcSUNSPSC=0&lista=si&NumeroFiltro=1&page=#{page}' https://www.argentinacompra.gov.ar/prod/onc/sitio/Perfiles/PUB/prv_consulta.asp | iconv -f iso-8859-1 -t utf-8`
+
+    source.scan(/ShowProveedor\('(\d+)','(\d+)'/).each do |proveedor_id, persona_id|
+      Persona.pending.lpush("#{proveedor_id},#{persona_id}")
+    end
+
+    last_page ||= source[/Total de páginas.*?(\d+)/, 1].to_i
+
+    page += 1
+  end
+
+end
